@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link rel="stylesheet" href="/css/styles.css">
+    <title>Trang chủ</title>
+</head>
+<body>
+<header th:insert="layout/header :: header"></header>
+
+<div class="container my-4">
+    <h1>Khám phá các điểm đến</h1>
+    <div class="row">
+        <div class="col-md-3">
+            <div class="card">
+<!--                <img src="/images/destination1.jpg" class="card-img-top" alt="...">-->
+                <div class="card-body">
+                    <h5 class="card-title">Hà Nội</h5>
+                </div>
+            </div>
+        </div>
+        <!-- Thêm các điểm đến khác -->
+    </div>
+</div>
+
+<footer th:insert="layout/footer :: footer"></footer>
+</body>
+</html>

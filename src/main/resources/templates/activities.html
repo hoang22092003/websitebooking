@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link rel="stylesheet" href="/css/styles.css">
+    <title>Danh sách hoạt động</title>
+</head>
+<body>
+<header th:insert="layout/header :: header"></header>
+
+<div class="container my-4">
+    <h2>Hoạt động phổ biến</h2>
+    <div class="row">
+        <div class="col-md-4" th:each="activity : ${activities}">
+            <div class="card">
+                <img th:src="@{/images/activity1.jpg}" class="card-img-top" alt="Activity">
+                <div class="card-body">
+                    <h5 th:text="${activity.name}" class="card-title">Tên hoạt động</h5>
+                    <p th:text="${activity.description}" class="card-text">Mô tả...</p>
+                    <a href="#" class="btn btn-primary">Chi tiết</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer th:insert="layout/footer :: footer"></footer>
+</body>
+</html>
