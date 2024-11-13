@@ -3,6 +3,7 @@ package com.websitebooking.controller;
 import com.websitebooking.model.User;
 import com.websitebooking.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -28,17 +29,20 @@ public class AuthenticationController {
     @PostMapping("/promote/admin/{userId}")
     public String promoteToAdmin(@PathVariable Long userId) {
         userService.promoteToAdmin(userId);
-        return "User promoted to Admin";
+        return "Admin";
     }
 
     @PostMapping("/promote/administrator/{userId}")
     public String promoteToSuperAdmin(@PathVariable Long userId) {
         userService.promoteToSuperAdmin(userId);
-        return "User promoted to Super Admin";
+        return "Super Admin";
     }
 
-    @GetMapping("/home")
-    public String home() {
-        return "home.html";
+    @Controller
+    public class HomeController {
+        @GetMapping("/home")
+        public String home() {
+            return "home";
+        }
     }
 }

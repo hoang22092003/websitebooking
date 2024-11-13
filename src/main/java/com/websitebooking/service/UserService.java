@@ -1,7 +1,7 @@
 package com.websitebooking.service;
 
 import com.websitebooking.model.User;
-import com.websitebooking.model.Role;
+import com.websitebooking.Role;
 import com.websitebooking.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

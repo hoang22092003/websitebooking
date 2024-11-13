@@ -1,30 +1,38 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang='en'>
+
 <head>
-    <link rel="stylesheet" href="/css/styles.css">
-    <title>Đăng nhập</title>
+    <meta charset='UTF-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+    <title>Document</title>
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <link rel='stylesheet' href='../../DoAnChuyenNganh/websitebooking/src/main/resources/static/css/index.css'>
 </head>
+
 <body>
-<header th:insert="layout/header :: header"></header>
 
-<div class="container my-5">
-    <h2 class="text-center">Đăng nhập</h2>
-    <form th:action="@{/login}" method="post" class="mx-auto" style="max-width: 400px;">
-        <div class="mb-3">
-            <label for="username" class="form-label">Tên đăng nhập</label>
-            <input type="text" class="form-control" id="username" name="username" placeholder="Nhập tên đăng nhập" required>
+<body>
+<section>
+    <div class="form-box">
+        <div class="form-value">
+            <form>
+                <h2>Login</h2>
+                <div class="inputbox"> <ion-icon name="mail-outline"></ion-icon> <input type="email" required>
+                    <label>Email</label>
+                </div>
+                <div class="inputbox"> <ion-icon name="lock-closed-outline"></ion-icon> <input type="password"
+                                                                                               required> <label>Password</label> </div>
+                <div class="forget"> <label><input type="checkbox">Remember Me</label> <a href="#">Forgot
+                    Password</a> </div> <button>Log In</button>
+                <div class="register">
+                    <p>Don't have an account? <a href="register.html">Sign Up</a></p>
+                </div>
+            </form>
         </div>
-        <div class="mb-3">
-            <label for="password" class="form-label">Mật khẩu</label>
-            <input type="password" class="form-control" id="password" name="password" placeholder="Nhập mật khẩu" required>
-        </div>
-        <button type="submit" class="btn btn-primary w-100">Đăng nhập</button>
-        <div class="text-center mt-3">
-            <p>Chưa có tài khoản? <a href="/register">Đăng ký ngay</a></p>
-        </div>
-    </form>
-</div>
-
-<footer th:insert="layout/footer :: footer"></footer>
+    </div>
+</section>
 </body>
+</body>
+
 </html>

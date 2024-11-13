@@ -1,4 +1,4 @@
-package com.websitebooking.model;
+package com.websitebooking;
 
 public enum Role {
     ADMINISTRATOR, // Quyền cao nhất

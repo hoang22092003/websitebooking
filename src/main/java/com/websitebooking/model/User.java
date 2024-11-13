@@ -1,5 +1,6 @@
 package com.websitebooking.model;
 
+import com.websitebooking.Role;
 import jakarta.persistence.*;
 import lombok.Data;
 
