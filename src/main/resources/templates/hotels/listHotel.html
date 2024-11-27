@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Hotels List</title>
+</head>
+<body>
+<h1>Danh sách khách sạn</h1>
+<div th:each="hotel : ${hotels}">
+    <p th:text="${hotel.name}"></p>
+    <p th:text="${hotel.location}"></p>
+    <p th:text="${hotel.pricePerNight}"></p>
+</div>
+</body>
+</html>

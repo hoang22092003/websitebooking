@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Website Booking - Trang chủ</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <link rel="stylesheet" th:href="@{/css/vip.css}">
+</head>
+<body>
+<div class="header">
+    <img alt="Logo" height="100" th:src="@{/images/logo.png}" width="100"/>
+    <div class="nav-links">
+        <a class="active" href="#">Tìm khách sạn</a>
+        <a href="#">Tìm Resort</a>
+        <a href="#">Tìm Du Thuyền</a>
+        <a href="#">Hoạt động</a>
+        <a href="#">Phiếu ưu đãi và ưu đãi</a>
+    </div>
+    <div class="user-info">
+        <img alt="Profile Picture" height="30" th:src="@{/images/profile picture.jpg}" width="30"/>
+        <span th:text="${username}">Tên người dùng</span>
+    </div>
+</div>
+
+<div class="search-section" th:style="'background-image: url(' + @{/images/banner.jpg} + ')'">
+    <h1>ĐẶT NGAY HÔM NAY, TRẢI NGHIỆM KỲ NGHỈ TUYỆT VỜI</h1>
+    <div class="search-box">
+        <input placeholder="Nhập tên khách sạn" type="text" name="hotelName" required>
+        <input placeholder="Địa điểm đến" type="text" name="location" required>
+        <input type="date" name="checkIn" required>
+        <input type="date" name="checkOut" required>
+        <input type="number" name="numberOfGuests" placeholder="Số lượng khách" required>
+        <input type="number" name="minPrice" placeholder="Giá tối thiểu" min="0">
+        <input type="number" name="maxPrice" placeholder="Giá tối đa" min="0">
+        <input type="text" name="amenities" placeholder="Tiện nghi (ví dụ: nhà hàng, bãi biển)">
+        <button type="submit">Tìm kiếm</button>
+    </div>
+</div>
+
+<div class="content">
+    <div id="hotel-list"></div> <!-- Kết quả tìm kiếm sẽ hiển thị ở đây -->
+</div>
+
+<script>
+    document.getElementById('searchForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        const location = document.getElementById('location').value;
+        const checkIn = document.getElementById('checkIn').value;
+        const checkOut = document.getElementById('checkOut').value;
+        const numberOfGuests = document.getElementById('numberOfGuests').value;
+        const minPrice = document.getElementById('minPrice').value;
+        const maxPrice = document.getElementById('maxPrice').value;
+        const amenities = document.getElementById('amenities').value;
+
+        fetch(`/api/hotels/search?location=${location}&checkIn=${checkIn}&checkOut=${checkOut}&numberOfGuests=${numberOfGuests}&minPrice=${minPrice}&maxPrice=${maxPrice}&amenities=${amenities}`)
+            .then(response => response.json())
+            .then(data => {
+                displayHotels(data);
+            });
+    });
+
+    function displayHotels(hotels) {
+        const hotelList = document.getElementById('hotel-list');
+        hotelList.innerHTML = "";
+
+        hotels.forEach(hotel => {
+            let hotelDiv = document.createElement('div');
+            hotelDiv.classList.add('hotel');
+            hotelDiv.innerHTML = `
+                <h3>${hotel.name}</h3>
+                <img src="${hotel.imageUrl}" alt="${hotel.name}" class="hotel-image">
+                <p>${hotel.description}</p>
+                <p><b>Địa điểm:</b> ${hotel.location}</p>
+                <p><b>Giá mỗi đêm:</b> ${hotel.pricePerNight} VND</p>
+                <p><b>Đánh giá:</b> ${hotel.rating} / 5</p>
+                <p><b>Tiện nghi:</b> ${hotel.amenities}</p>
+                <p><b>Số phòng còn trống:</b> ${hotel.availableRooms}</p>
+            `;
+            hotelList.appendChild(hotelDiv);
+        });
+    }
+</script>
+
+<div class="content">
+    <div class="section-title">Các điểm đến thu hút nhất Việt Nam</div>
+    <div class="carousel">
+        <div class="card">
+            <img alt="Hồ Chí Minh" height="200" th:src="@{/images/HCM.jpg}" width="300"/>
+            <div class="card-body">
+                <h3>Hồ Chí Minh</h3>
+            </div>
+        </div>
+        <div class="card">
+            <img alt="Hà Nội" height="200" th:src="@{/images/Hà nội.jpg}" width="300"/>
+            <div class="card-body">
+                <h3>Hà Nội</h3>
+            </div>
+        </div>
+        <div class="card">
+            <img alt="Đà Nẵng" height="200" th:src="@{/images/Đà Nẵng.jpg}" width="300"/>
+            <div class="card-body">
+                <h3>Đà Nẵng</h3>
+            </div>
+        </div>
+    </div>
+    <div class="vip-section">
+        <div class="section-title">
+            <h2>Chào mừng trở lại, <span th:text="${username}">Tên người dùng</span>!</h2>
+            <p>Cấp độ VIP của bạn: <span th:text="${vipLevel}"></span></p>
+        </div>
+        <div class="card vip-card">
+            <div class="card-body">
+                <div class="vip-header">
+                    <img th:src="${vipImage}" alt="VIP Level" class="vip-icon">
+                    <h3 th:text="${vipLevel}">VIP</h3>
+                </div>
+                <p class="vip-message">Welcome Booking VIP Member!</p>
+                <p>
+                    Mỗi khi quý khách thấy thẻ VIP, điều này có nghĩa là quý khách đang nhận được giảm giá đặc biệt hoặc lợi ích chỉ dành cho người dùng VIP.
+                </p>
+                <hr>
+                <div class="vip-levels">
+                    <p><b>Bronze:</b> 2 đêm đặt phòng</p>
+                    <p><b>Silver:</b> 5 đêm đặt phòng</p>
+                    <p><b>Gold:</b> 15 đêm đặt phòng</p>
+                    <p><b>Platinum:</b> 25 đêm đặt phòng</p>
+                </div>
+
+                <!-- Progress bar -->
+                <div class="vip-levels-progress">
+                    <div class="level-item">
+                        <span class="level-icon level-bronze"></span>
+                        <div class="level-line"></div>
+                        <div class="level-text">Bronze</div>
+                    </div>
+                    <div class="level-item">
+                        <span class="level-icon level-silver"></span>
+                        <div class="level-line"></div>
+                        <div class="level-text">Silver</div>
+                    </div>
+                    <div class="level-item">
+                        <span class="level-icon level-gold"></span>
+                        <div class="level-line"></div>
+                        <div class="level-text">Gold</div>
+                    </div>
+                    <div class="level-item">
+                        <span class="level-icon level-platinum"></span>
+                        <div class="level-line"></div>
+                        <div class="level-text">Platinum</div>
+                    </div>
+                </div>
+
+                <!-- Nút "Chi tiết thêm" -->
+                <button class="btn-details">Chi tiết thêm</button>
+            </div>
+        </div>
+    </div>
+    <div class="section-title">Các điểm đến nổi tiếng ngoài Việt Nam</div>
+    <div class="carousel">
+        <div class="card">
+            <img alt="Tokyo" height="200" src="https://storage.googleapis.com/a1aa/image/1BhywNHGTzZaCl4yJbMeoN815fpeP9ersfPdk0USIlS9pfu8E.jpg" width="300"/>
+            <div class="card-body">
+                <h3>Tokyo</h3>
+                <p>12,048 chỗ ở</p>
+            </div>
+        </div>
+        <div class="card">
+            <img alt="Bangkok" height="200" src="https://storage.googleapis.com/a1aa/image/eea9gaFxIpqwrkHiNlzdReO4eV2LzEHGp6eGdUPupWWzqfu8E.jpg" width="300"/>
+            <div class="card-body">
+                <h3>Bangkok</h3>
+                <p>12,048 chỗ ở</p>
+            </div>
+        </div>
+        <div class="card">
+            <img alt="Nagoya" height="200" src="https://storage.googleapis.com/a1aa/image/REJqPf63WAwDda7Ib9NbkYTydFKMHjJHECf7mwXR05uQ97yTA.jpg" width="300"/>
+            <div class="card-body">
+                <h3>Nagoya</h3>
+                <p>1,633 chỗ ở</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="footer">
+    <div class="footer-links">
+        <div>
+            <h4>Trợ giúp</h4>
+            <a href="#">Trung tâm trợ giúp</a><br/>
+            <a href="#">Câu hỏi thường gặp</a><br/>
+            <a href="#">Chính sách bảo mật</a><br/>
+            <a href="#">Chính sách về cookie</a><br/>
+            <a href="#">Điều khoản sử dụng</a><br/>
+            <a href="#">Dự luật Dịch vụ số (EU)</a><br/>
+            <a href="#">Nguyên tắc về bảo mật nội dung</a><br/>
+            <a href="#">Tuân thủ về Dự luật Nội bộ Hiện đại</a>
+        </div>
+        <div>
+            <h4>Công ty</h4>
+            <a href="#">Về chúng tôi</a><br/>
+            <a href="#">Sự nghiệp</a><br/>
+            <a href="#">Phòng báo chí</a><br/>
+            <a href="#">Nhật ký mạng</a><br/>
+            <a href="#">DMMKAT</a>
+        </div>
+        <div>
+            <h4>Điểm du lịch</h4>
+            <a href="#">Cuộc gọi</a><br/>
+            <a href="#">Mọi chúng bay</a>
+        </div>
+        <p>Mọi nội dung tại đây © 2005 – 2024 Công ty TNHH Booking. Bảo Lưu Mọi Quyền.</p>
+    </div>
+</div>
+</body>
+</html>
