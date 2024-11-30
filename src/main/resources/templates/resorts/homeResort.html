@@ -10,10 +10,12 @@
 </head>
 <body>
 <div class="header">
-    <img alt="Logo" height="100" th:src="@{/images/logo.png}" width="100"/>
+    <a th:href="@{/}">
+        <img alt="Logo" height="100" th:src="@{/images/logo.png}" width="100"/>
+    </a>
     <div class="nav-links">
-        <a class="active" href="#">Tìm khách sạn</a>
-        <a href="#">Tìm Resort</a>
+        <a th:href="@{/auth/hotels/homeHotel}">Tìm khách sạn</a>
+        <a class="active" href="#">Tìm Resort</a>
         <a href="#">Tìm Du Thuyền</a>
         <a href="#">Hoạt động</a>
         <a href="#">Phiếu ưu đãi và ưu đãi</a>
@@ -40,46 +42,46 @@
 </div>
 
 <div class="content">
-    <div id="hotel-list"></div> <!-- Kết quả tìm kiếm sẽ hiển thị ở đây -->
+    <div id="resort-list"></div> <!-- Kết quả tìm kiếm sẽ hiển thị ở đây -->
 </div>
 
 <script>
     document.getElementById('searchForm').addEventListener('submit', function(event) {
-        event.preventDefault();
+    event.preventDefault();
 
-        const location = document.getElementById('location').value;
-        const checkIn = document.getElementById('checkIn').value;
-        const checkOut = document.getElementById('checkOut').value;
-        const numberOfGuests = document.getElementById('numberOfGuests').value;
-        const minPrice = document.getElementById('minPrice').value;
-        const maxPrice = document.getElementById('maxPrice').value;
-        const amenities = document.getElementById('amenities').value;
+    const location = document.getElementById('location').value;
+    const checkIn = document.getElementById('checkIn').value;
+    const checkOut = document.getElementById('checkOut').value;
+    const numberOfGuests = document.getElementById('numberOfGuests').value;
+    const minPrice = document.getElementById('minPrice').value;
+    const maxPrice = document.getElementById('maxPrice').value;
+    const amenities = document.getElementById('amenities').value;
 
-        fetch(`/api/hotels/search?location=${location}&checkIn=${checkIn}&checkOut=${checkOut}&numberOfGuests=${numberOfGuests}&minPrice=${minPrice}&maxPrice=${maxPrice}&amenities=${amenities}`)
-            .then(response => response.json())
-            .then(data => {
-                displayHotels(data);
-            });
+    fetch(`/api/resorts/search?location=${location}&checkIn=${checkIn}&checkOut=${checkOut}&numberOfGuests=${numberOfGuests}&minPrice=${minPrice}&maxPrice=${maxPrice}&amenities=${amenities}`)
+        .then(response => response.json())
+        .then(data => {
+            displayResorts(data);
+        });
     });
 
-    function displayHotels(hotels) {
-        const hotelList = document.getElementById('hotel-list');
-        hotelList.innerHTML = "";
+    function displayResorts(resorts) {
+        const resortList = document.getElementById('resort-list');
+        resortList.innerHTML = "";
 
-        hotels.forEach(hotel => {
-            let hotelDiv = document.createElement('div');
-            hotelDiv.classList.add('hotel');
-            hotelDiv.innerHTML = `
-                <h3>${hotel.name}</h3>
-                <img src="${hotel.imageUrl}" alt="${hotel.name}" class="hotel-image">
-                <p>${hotel.description}</p>
-                <p><b>Địa điểm:</b> ${hotel.location}</p>
-                <p><b>Giá mỗi đêm:</b> ${hotel.pricePerNight} VND</p>
-                <p><b>Đánh giá:</b> ${hotel.rating} / 5</p>
-                <p><b>Tiện nghi:</b> ${hotel.amenities}</p>
-                <p><b>Số phòng còn trống:</b> ${hotel.availableRooms}</p>
+        resorts.forEach(resort => {
+            let resortDiv = document.createElement('div');
+            resortDiv.classList.add('resort');
+            resortDiv.innerHTML = `
+                <h3>${resort.name}</h3>
+                <img src="${resort.imageUrl}" alt="${resort.name}" class="resort-image">
+                <p>${resort.description}</p>
+                <p><b>Địa điểm:</b> ${resort.location}</p>
+                <p><b>Giá mỗi đêm:</b> ${resort.pricePerNight} VND</p>
+                <p><b>Đánh giá:</b> ${resort.rating} / 5</p>
+                <p><b>Tiện nghi:</b> ${resort.amenities}</p>
+                <p><b>Số phòng còn trống:</b> ${resort.availableRooms}</p>
             `;
-            hotelList.appendChild(hotelDiv);
+            resortList.appendChild(resortDiv);
         });
     }
 </script>

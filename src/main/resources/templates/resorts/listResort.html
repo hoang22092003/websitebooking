@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Danh sách Resort</title>
+</head>
+<body>
+<h1>Danh sách Resort</h1>
+<div th:each="resort : ${resorts}">
+    <div class="resort">
+        <h3 th:text="${resort.name}"></h3>
+        <img th:src="@{${resort.imageUrl}}" alt="Resort Image" class="resort-image"/>
+        <p th:text="'Địa điểm: ' + ${resort.location}"></p>
+        <p th:text="'Giá mỗi đêm: ' + ${resort.pricePerNight} + ' VND'"></p>
+        <p th:text="'Đánh giá: ' + ${resort.rating}"></p>
+        <p th:text="'Tiện nghi: ' + ${resort.amenities}"></p>
+        <p th:text="'Số phòng còn trống: ' + ${resort.availableRooms}"></p>
+    </div>
+</div>
+</body>
+</html>
