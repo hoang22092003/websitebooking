@@ -1,10 +1,47 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Activities</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-$END$
+<div class="header">
+    <h1>Khám Phá Các Hoạt Động</h1>
+    <input type="text" id="search-location" placeholder="Nhập địa điểm...">
+    <button id="search-btn">Tìm kiếm</button>
+</div>
+
+<div id="activity-list" class="activity-list"></div>
+
+<script>
+    document.getElementById('search-btn').addEventListener('click', function () {
+        const location = document.getElementById('search-location').value;
+
+        fetch(`/api/activities/search?location=${location}`)
+            .then(response => response.json())
+            .then(data => displayActivities(data));
+    });
+
+    function displayActivities(activities) {
+        const activityList = document.getElementById('activity-list');
+        activityList.innerHTML = "";
+
+        activities.forEach(activity => {
+            const activityDiv = document.createElement('div');
+            activityDiv.classList.add('activity');
+            activityDiv.innerHTML = `
+                <img src="${activity.imageUrl}" alt="${activity.name}">
+                <h3>${activity.name}</h3>
+                <p>${activity.description}</p>
+                <p><b>Địa điểm:</b> ${activity.location}</p>
+                <p><b>Giá:</b> ${activity.price} VND</p>
+                <p><b>Đánh giá:</b> ${activity.rating} / 5</p>
+            `;
+            activityList.appendChild(activityDiv);
+        });
+    }
+</script>
 </body>
 </html>

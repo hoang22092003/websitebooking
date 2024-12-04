@@ -1,0 +1,201 @@
+body {
+    font-family: 'Roboto', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f5f5f5;
+}
+
+.vip-section {
+    display: flex;
+    align-items: center; /* Căn giữa dọc */
+    justify-content: flex-start; /* Đặt hình ảnh và phần Welcome nằm ngang */
+    margin-top: 20px;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 15px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.vip-card {
+    background-color: white;
+    border: 2px solid #ddd;
+    border-radius: 10px;
+    padding: 20px;
+    width: 45%; /* Đặt chiều rộng cho phần VIP */
+    text-align: center;
+}
+
+.vip-header {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start; /* Đặt hình ảnh và tên VIP nằm bên trái */
+    margin-bottom: 20px;
+}
+
+.vip-header img.vip-icon {
+    height: 60px;
+    margin-right: 20px; /* Khoảng cách giữa hình ảnh và tên VIP */
+}
+
+.vip-header h3 {
+    font-size: 28px;
+    font-weight: bold;
+    color: #d4af37; /* Màu vàng cho Platinum */
+}
+
+.vip-message {
+    font-size: 16px;
+    font-weight: bold;
+    color: #007bff;
+    margin-bottom: 20px;
+    font-style: italic;
+    text-align: left; /* Căn chỉnh văn bản sang bên trái */
+}
+
+.vip-card p {
+    font-size: 14px;
+    text-align: left; /* Căn chỉnh văn bản sang bên trái */
+}
+
+.vip-levels {
+    display: flex;
+    justify-content: center;
+    margin: 15px 0;
+}
+
+.vip-levels .level {
+    text-align: center;
+    margin: 0 10px;
+}
+
+.vip-levels .level span {
+    display: block;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    margin: 0 auto 5px;
+    background-color: #ddd;
+}
+
+.vip-levels .level.bronze span {
+    background-color: #cd7f32; /* Màu đồng */
+}
+
+.vip-levels .level.silver span {
+    background-color: #c0c0c0; /* Màu bạc */
+}
+
+.vip-levels .level.gold span {
+    background-color: #ffd700; /* Màu vàng */
+}
+
+.vip-levels .level.platinum span {
+    background-color: #e5e4e2; /* Màu bạch kim */
+}
+
+.vip-levels .level p {
+    font-size: 12px;
+}
+
+.vip-levels .level.bronze p {
+    color: #cd7f32;
+}
+
+.vip-levels .level.silver p {
+    color: #c0c0c0;
+}
+
+.vip-levels .level.gold p {
+    color: #ffd700;
+}
+
+.vip-levels .level.platinum p {
+    color: #e5e4e2;
+}
+
+.vip-levels-progress {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.level-item {
+    text-align: center;
+}
+
+.level-line {
+    width: 40px;
+    height: 3px;
+    background-color: #ddd;
+    margin-top: 10px;
+}
+
+.level-icon {
+    display: block;
+    width: 25px;
+    height: 25px;
+    margin: 0 auto;
+    border-radius: 50%;
+}
+
+.level-bronze {
+    background-color: #cd7f32;
+}
+
+.level-silver {
+    background-color: #c0c0c0;
+}
+
+.level-gold {
+    background-color: #ffd700;
+}
+
+.level-platinum {
+    background-color: #e5e4e2;
+}
+
+.level-text {
+    font-weight: bold;
+    margin-top: 5px;
+}
+
+.btn-details {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 10px 25px;
+    font-size: 14px;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 20px;
+}
+
+.btn-details:hover {
+    background-color: #0056b3;
+}
+
+.welcome-section {
+    width: 50%; /* Đặt chiều rộng cho phần "Welcome" */
+    text-align: left;
+}
+
+.welcome-section h3 {
+    font-size: 22px;
+    font-weight: bold;
+    color: #333;
+}
+
+.welcome-section p {
+    font-size: 16px;
+    color: #555;
+}
+
+.welcome-section .vip-card img {
+    width: 100px;
+    height: 60px;
+    margin-right: 20px;
+}
+

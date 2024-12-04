@@ -1,6 +1,6 @@
 package com.websitebooking.service;
 
-import com.websitebooking.entity.Coupon;
+import com.websitebooking.model.Coupon;
 import com.websitebooking.repository.CouponRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,7 +10,6 @@ import java.util.Optional;
 
 @Service
 public class CouponService {
-
     @Autowired
     private CouponRepository couponRepository;
 
@@ -18,30 +17,31 @@ public class CouponService {
         return couponRepository.findAll();
     }
 
-    public Optional<Coupon> getCouponById(Long id) {
-        return couponRepository.findById(id);
-    }
-
-    public Coupon addCoupon(Coupon coupon) {
+    public Coupon saveCoupon(Coupon coupon) {
         return couponRepository.save(coupon);
     }
 
-    public Coupon updateCoupon(Long id, Coupon updatedCoupon) {
-        return couponRepository.findById(id)
-                .map(coupon -> {
-                    coupon.setCode(updatedCoupon.getCode());
-                    coupon.setDiscountPercentage(updatedCoupon.getDiscountPercentage());
-                    coupon.setExpirationDate(updatedCoupon.getExpirationDate());
-                    return couponRepository.save(coupon);
-                })
-                .orElseThrow(() -> new RuntimeException("Coupon not found with id: " + id));
+    public Optional<Coupon> getCouponByCode(String code) {
+        return couponRepository.findByCode(code);
     }
 
     public void deleteCoupon(Long id) {
         couponRepository.deleteById(id);
     }
 
-    public Coupon getCouponByCode(String code) {
-        return couponRepository.findByCode(code);
+    public Coupon applyCoupon(String code) {
+        Optional<Coupon> optionalCoupon = couponRepository.findByCode(code);
+
+        if (optionalCoupon.isPresent()) {
+            Coupon coupon = optionalCoupon.get();
+            if (coupon.getIsActive() && coupon.getEndDate().after(new java.util.Date())) {
+                return coupon; // Coupon hợp lệ
+            } else {
+                throw new IllegalArgumentException("Coupon đã hết hạn hoặc không hoạt động!");
+            }
+        } else {
+            throw new IllegalArgumentException("Coupon không tồn tại!");
+        }
     }
 }
+

@@ -3,10 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Website Booking - Trang chủ</title>
+    <title>Website Booking - Trang chủ Resort</title>
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
     <link rel="stylesheet" th:href="@{/css/styles.css}">
     <link rel="stylesheet" th:href="@{/css/vip.css}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+    <script src="https://cdn.jsdelivr.net/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
 </head>
 <body>
 <div class="header">
@@ -28,57 +32,71 @@
 
 <div class="search-section" th:style="'background-image: url(' + @{/images/banner.jpg} + ')'">
     <h1>ĐẶT NGAY HÔM NAY, TRẢI NGHIỆM KỲ NGHỈ TUYỆT VỜI</h1>
-    <div class="search-box">
-        <input placeholder="Nhập tên khách sạn" type="text" name="hotelName" required>
-        <input placeholder="Địa điểm đến" type="text" name="location" required>
-        <input type="date" name="checkIn" required>
-        <input type="date" name="checkOut" required>
-        <input type="number" name="numberOfGuests" placeholder="Số lượng khách" required>
+    <form th:action="@{/auth/resorts/search}" method="get" class="search-box">
+        <input placeholder="Nhập tên resort" type="text" name="resortName" required="required">
+        <input placeholder="Địa điểm" type="text" name="location" required="required">
         <input type="number" name="minPrice" placeholder="Giá tối thiểu" min="0">
         <input type="number" name="maxPrice" placeholder="Giá tối đa" min="0">
-        <input type="text" name="amenities" placeholder="Tiện nghi (ví dụ: nhà hàng, bãi biển)">
-        <button type="submit">Tìm kiếm</button>
-    </div>
+<!--        <input type="text" name="amenities" placeholder="Tiện nghi (ví dụ: spa, hồ bơi)">-->
+        <button type="submit" class="btn btn-primary w-100">Tìm kiếm</button>
+    </form>
 </div>
 
 <div class="content">
-    <div id="resort-list"></div> <!-- Kết quả tìm kiếm sẽ hiển thị ở đây -->
+    <div id="listResort" th:each="resort : ${resorts}">
+        <h2 th:text="${resort.resortName}">Tên Resort</h2>
+        <p th:text="${resort.description}">Mô tả...</p>
+        <a th:href="@{/auth/resorts/search/{id}(id=${resort.id})}">Xem Chi Tiết</a>
+    </div>
 </div>
 
 <script>
+    // Xử lý sự kiện form tìm <kiếm></kiếm>
     document.getElementById('searchForm').addEventListener('submit', function(event) {
-    event.preventDefault();
+        event.preventDefault();
 
-    const location = document.getElementById('location').value;
-    const checkIn = document.getElementById('checkIn').value;
-    const checkOut = document.getElementById('checkOut').value;
-    const numberOfGuests = document.getElementById('numberOfGuests').value;
-    const minPrice = document.getElementById('minPrice').value;
-    const maxPrice = document.getElementById('maxPrice').value;
-    const amenities = document.getElementById('amenities').value;
+        const resortName = document.getElementById('resortName').value; // Thay đổi từ hotelName thành resortName
+        const location = document.getElementById('location').value;
+        const minPrice = document.getElementById('minPrice').value;
+        const maxPrice = document.getElementById('maxPrice').value;
+        // const amenities = document.getElementById('amenities').value; // Nếu không dùng amenities thì bỏ qua
 
-    fetch(`/api/resorts/search?location=${location}&checkIn=${checkIn}&checkOut=${checkOut}&numberOfGuests=${numberOfGuests}&minPrice=${minPrice}&maxPrice=${maxPrice}&amenities=${amenities}`)
-        .then(response => response.json())
-        .then(data => {
-            displayResorts(data);
+        // Tạo URL query string
+        const params = new URLSearchParams({
+            resortName,
+            location,
+            minPrice,
+            maxPrice,
+            // amenities // Nếu bạn muốn sử dụng amenities, đừng quên bỏ comment ở đây
         });
+
+        // Fetch data từ backend với URL có query parameters
+        const url = `/auth/resorts/search?${params.toString()}`;
+
+        fetch(url)
+            .then(response => response.json())
+            .then(data => {
+                displayResorts(data);
+            })
+            .catch(error => console.error('Error:', error));
     });
 
+    // Hiển thị các resort tìm được
     function displayResorts(resorts) {
-        const resortList = document.getElementById('resort-list');
+        const resortList = document.getElementById('resort-list'); // Thay đổi từ hotel-list thành resort-list
         resortList.innerHTML = "";
 
         resorts.forEach(resort => {
             let resortDiv = document.createElement('div');
             resortDiv.classList.add('resort');
             resortDiv.innerHTML = `
-                <h3>${resort.name}</h3>
-                <img src="${resort.imageUrl}" alt="${resort.name}" class="resort-image">
+                <h3>${resort.resortName}</h3> <!-- Thay hotel.name thành resort.resortName -->
+                <img src="${resort.imageUrl}" alt="${resort.resortName}" class="resort-image">
                 <p>${resort.description}</p>
                 <p><b>Địa điểm:</b> ${resort.location}</p>
                 <p><b>Giá mỗi đêm:</b> ${resort.pricePerNight} VND</p>
                 <p><b>Đánh giá:</b> ${resort.rating} / 5</p>
-                <p><b>Tiện nghi:</b> ${resort.amenities}</p>
+                <p><b>Tiện nghi:</b> ${resort.amenities.join(', ')}</p> <!-- Hiển thị các tiện nghi -->
                 <p><b>Số phòng còn trống:</b> ${resort.availableRooms}</p>
             `;
             resortList.appendChild(resortDiv);
@@ -109,53 +127,39 @@
         </div>
     </div>
     <div class="vip-section">
-        <div class="section-title">
-            <h2>Chào mừng trở lại, <span th:text="${username}">Tên người dùng</span>!</h2>
+        <div class="welcome-section">
+            <h3>Chào mừng trở lại, <span th:text="${username}">Tên người dùng</span>!</h3>
             <p>Cấp độ VIP của bạn: <span th:text="${vipLevel}"></span></p>
+            <p>
+                Mỗi khi quý khách thấy thẻ VIP, điều đó có nghĩa là quý khách đang nhận được giảm giá đặc biệt hoặc lợi ích chỉ dành cho người dùng VIP.
+            </p>
         </div>
-        <div class="card vip-card">
+        <div class="vip-card">
             <div class="card-body">
                 <div class="vip-header">
                     <img th:src="${vipImage}" alt="VIP Level" class="vip-icon">
                     <h3 th:text="${vipLevel}">VIP</h3>
                 </div>
                 <p class="vip-message">Welcome Booking VIP Member!</p>
-                <p>
-                    Mỗi khi quý khách thấy thẻ VIP, điều này có nghĩa là quý khách đang nhận được giảm giá đặc biệt hoặc lợi ích chỉ dành cho người dùng VIP.
-                </p>
                 <hr>
                 <div class="vip-levels">
-                    <p><b>Bronze:</b> 2 đêm đặt phòng</p>
-                    <p><b>Silver:</b> 5 đêm đặt phòng</p>
-                    <p><b>Gold:</b> 15 đêm đặt phòng</p>
-                    <p><b>Platinum:</b> 25 đêm đặt phòng</p>
-                </div>
-
-                <!-- Progress bar -->
-                <div class="vip-levels-progress">
-                    <div class="level-item">
-                        <span class="level-icon level-bronze"></span>
-                        <div class="level-line"></div>
-                        <div class="level-text">Bronze</div>
+                    <div class="level bronze">
+                        <span></span>
+                        <p>Bronze</p>
                     </div>
-                    <div class="level-item">
-                        <span class="level-icon level-silver"></span>
-                        <div class="level-line"></div>
-                        <div class="level-text">Silver</div>
+                    <div class="level silver">
+                        <span></span>
+                        <p>Silver</p>
                     </div>
-                    <div class="level-item">
-                        <span class="level-icon level-gold"></span>
-                        <div class="level-line"></div>
-                        <div class="level-text">Gold</div>
+                    <div class="level gold">
+                        <span></span>
+                        <p>Gold</p>
                     </div>
-                    <div class="level-item">
-                        <span class="level-icon level-platinum"></span>
-                        <div class="level-line"></div>
-                        <div class="level-text">Platinum</div>
+                    <div class="level platinum">
+                        <span></span>
+                        <p>Platinum</p>
                     </div>
                 </div>
-
-                <!-- Nút "Chi tiết thêm" -->
                 <button class="btn-details">Chi tiết thêm</button>
             </div>
         </div>
@@ -195,25 +199,14 @@
             <a href="#">Chính sách bảo mật</a><br/>
             <a href="#">Chính sách về cookie</a><br/>
             <a href="#">Điều khoản sử dụng</a><br/>
-            <a href="#">Dự luật Dịch vụ số (EU)</a><br/>
-            <a href="#">Nguyên tắc về bảo mật nội dung</a><br/>
-            <a href="#">Tuân thủ về Dự luật Nội bộ Hiện đại</a>
         </div>
         <div>
             <h4>Công ty</h4>
             <a href="#">Về chúng tôi</a><br/>
             <a href="#">Sự nghiệp</a><br/>
-            <a href="#">Phòng báo chí</a><br/>
-            <a href="#">Nhật ký mạng</a><br/>
-            <a href="#">DMMKAT</a>
         </div>
-        <div>
-            <h4>Điểm du lịch</h4>
-            <a href="#">Cuộc gọi</a><br/>
-            <a href="#">Mọi chúng bay</a>
-        </div>
-        <p>Mọi nội dung tại đây © 2005 – 2024 Công ty TNHH Booking. Bảo Lưu Mọi Quyền.</p>
     </div>
+    <p>Mọi nội dung tại đây © 2005 – 2024 Công ty TNHH WebsiteBooking. Bảo Lưu Mọi Quyền.</p>
 </div>
 </body>
 </html>

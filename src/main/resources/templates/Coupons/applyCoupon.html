@@ -1,10 +1,15 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
+    <title>Kết quả áp dụng Coupon</title>
 </head>
 <body>
-$END$
+<div class="container mt-4">
+    <h1 class="mb-4">Kết quả áp dụng Coupon</h1>
+    <p>Mã Coupon: <span th:text="${coupon.code}"></span></p>
+    <p>Phần Trăm Giảm Giá: <span th:text="${coupon.discountPercentage} + '%'"></span></p>
+    <p>Giảm Giá Tối Đa: <span th:text="${coupon.maxDiscountAmount} + ' VND'"></span></p>
+    <p>Ngày Hết Hạn: <span th:text="${#dates.format(coupon.endDate, 'dd/MM/yyyy')}"></span></p>
+</div>
 </body>
 </html>

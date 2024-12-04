@@ -1,12 +1,11 @@
 package com.websitebooking.controller;
 
-import com.websitebooking.entity.Activity;
+import com.websitebooking.model.Activity;
 import com.websitebooking.service.ActivityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/activities")
@@ -20,23 +19,23 @@ public class ActivityController {
         return activityService.getAllActivities();
     }
 
-    @GetMapping("/{id}")
-    public Optional<Activity> getActivityById(@PathVariable Long id) {
-        return activityService.getActivityById(id);
-    }
-
     @PostMapping
-    public Activity addActivity(@RequestBody Activity activity) {
-        return activityService.addActivity(activity);
+    public Activity createActivity(@RequestBody Activity activity) {
+        return activityService.saveActivity(activity);
     }
 
-    @PutMapping("/{id}")
-    public Activity updateActivity(@PathVariable Long id, @RequestBody Activity updatedActivity) {
-        return activityService.updateActivity(id, updatedActivity);
+    @GetMapping("/{id}")
+    public Activity getActivityById(@PathVariable Long id) {
+        return activityService.getActivityById(id);
     }
 
     @DeleteMapping("/{id}")
     public void deleteActivity(@PathVariable Long id) {
         activityService.deleteActivity(id);
+    }
+
+    @GetMapping("/search")
+    public List<Activity> searchActivities(@RequestParam String location) {
+        return activityService.searchActivities(location);
     }
 }

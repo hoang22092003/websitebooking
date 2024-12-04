@@ -1,10 +1,15 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
+    <title>Chi tiết Booking</title>
 </head>
 <body>
-$END$
+<h1>Chi tiết đặt phòng</h1>
+<p>Tên Khách Sạn: <span th:text="${booking.hotel.name}">Tên Khách Sạn</span></p>
+<p>Tên Người Dùng: <span th:text="${booking.user.username}">Người Dùng</span></p>
+<p>Ngày Nhận Phòng: <span th:text="${booking.checkInDate}">Ngày Nhận</span></p>
+<p>Ngày Trả Phòng: <span th:text="${booking.checkOutDate}">Ngày Trả</span></p>
+<p>Giá Tổng: <span th:text="${booking.totalPrice}">Tổng Giá</span></p>
+<p>Trạng Thái: <span th:text="${booking.status}">Trạng Thái</span></p>
 </body>
 </html>

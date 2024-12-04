@@ -7,7 +7,7 @@
 <h1>Danh sách Resort</h1>
 <div th:each="resort : ${resorts}">
     <div class="resort">
-        <h3 th:text="${resort.name}"></h3>
+        <h3 th:text="${resort.resortName}"></h3>
         <img th:src="@{${resort.imageUrl}}" alt="Resort Image" class="resort-image"/>
         <p th:text="'Địa điểm: ' + ${resort.location}"></p>
         <p th:text="'Giá mỗi đêm: ' + ${resort.pricePerNight} + ' VND'"></p>

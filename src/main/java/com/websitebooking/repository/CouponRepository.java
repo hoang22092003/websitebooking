@@ -1,8 +1,10 @@
 package com.websitebooking.repository;
 
-import com.websitebooking.entity.Coupon;
+import com.websitebooking.model.Coupon;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.Optional;
+
 public interface CouponRepository extends JpaRepository<Coupon, Long> {
-    Coupon findByCode(String code);
+    Optional<Coupon> findByCode(String code);
 }

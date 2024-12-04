@@ -1,6 +1,6 @@
 package com.websitebooking.service;
 
-import com.websitebooking.entity.Activity;
+import com.websitebooking.model.Activity;
 import com.websitebooking.repository.ActivityRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,29 +18,20 @@ public class ActivityService {
         return activityRepository.findAll();
     }
 
-    public Optional<Activity> getActivityById(Long id) {
-        return activityRepository.findById(id);
-    }
-
-    public Activity addActivity(Activity activity) {
+    public Activity saveActivity(Activity activity) {
         return activityRepository.save(activity);
     }
 
-    public Activity updateActivity(Long id, Activity updatedActivity) {
-        return activityRepository.findById(id)
-                .map(activity -> {
-                    activity.setName(updatedActivity.getName());
-                    activity.setDescription(updatedActivity.getDescription());
-                    activity.setLocation(updatedActivity.getLocation());
-                    activity.setDate(updatedActivity.getDate());
-                    activity.setPrice(updatedActivity.getPrice());
-                    activity.setImageUrl(updatedActivity.getImageUrl());
-                    return activityRepository.save(activity);
-                })
-                .orElseThrow(() -> new RuntimeException("Activity not found with id: " + id));
+    public Activity getActivityById(Long id) {
+        Optional<Activity> activity = activityRepository.findById(id);
+        return activity.orElse(null); // hoặc throw Exception nếu muốn xử lý lỗi khi không tìm thấy
     }
 
     public void deleteActivity(Long id) {
         activityRepository.deleteById(id);
+    }
+
+    public List<Activity> searchActivities(String location) {
+        return activityRepository.findByLocationContainingAndIsAvailable(location, true);
     }
 }

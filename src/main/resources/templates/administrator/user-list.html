@@ -1,10 +1,43 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
+    <title>User Management</title>
+    <!-- Thêm CSS Bootstrap -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body>
-$END$
+<div class="container mt-5">
+    <h1>User Management</h1>
+    <div th:if="${param.success}">
+        <div class="alert alert-success" th:text="${param.success}"></div>
+    </div>
+    <div th:if="${param.error}">
+        <div class="alert alert-danger" th:text="${param.error}"></div>
+    </div>
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Username</th>
+            <th>Email</th>
+            <th>Role</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="user : ${users}">
+            <td th:text="${user.id}"></td>
+            <td th:text="${user.username}"></td>
+            <td th:text="${user.email}"></td>
+            <td th:text="${user.role}"></td>
+            <td>
+                <a th:href="@{'/admin/users/' + ${user.id} + '/edit'}" class="btn btn-primary btn-sm">Edit Role</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<!-- Thêm JS Bootstrap -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

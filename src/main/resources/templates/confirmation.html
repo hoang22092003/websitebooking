@@ -1,10 +1,26 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Xác nhận đặt phòng</title>
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
-$END$
+<!-- Header -->
+<div th:replace="components/header :: header"></div>
+
+<!-- Thông báo xác nhận -->
+<section class="confirmation py-5">
+    <div class="container text-center">
+        <h2>Cảm ơn bạn đã đặt phòng!</h2>
+        <p>Mã đặt phòng của bạn là: <strong th:text="${bookingCode}"></strong></p>
+        <a href="/" class="btn btn-primary">Quay lại trang chủ</a>
+    </div>
+</section>
+
+<!-- Footer -->
+<div th:replace="components/footer :: footer"></div>
 </body>
 </html>

@@ -7,13 +7,20 @@
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
     <link rel="stylesheet" th:href="@{/css/styles.css}">
     <link rel="stylesheet" th:href="@{/css/vip.css}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+    <script src="https://cdn.jsdelivr.net/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+</head>
 </head>
 <body>
 <div class="header">
-    <img alt="Logo" height="100" th:src="@{/images/logo.png}" width="100"/>
+    <a th:href="@{/}">
+        <img alt="Logo" height="100" th:src="@{/images/logo.png}" width="100"/>
+    </a>
     <div class="nav-links">
         <a class="active" href="#">Tìm khách sạn</a>
-        <a href="#">Tìm Resort</a>
+        <a th:href="@{/auth/resorts/homeResort}">Tìm Resort</a>
         <a href="#">Tìm Du Thuyền</a>
         <a href="#">Hoạt động</a>
         <a href="#">Phiếu ưu đãi và ưu đãi</a>
@@ -26,42 +33,63 @@
 
 <div class="search-section" th:style="'background-image: url(' + @{/images/banner.jpg} + ')'">
     <h1>ĐẶT NGAY HÔM NAY, TRẢI NGHIỆM KỲ NGHỈ TUYỆT VỜI</h1>
-    <div class="search-box">
-        <input placeholder="Nhập tên khách sạn" type="text" name="hotelName" required>
-        <input placeholder="Địa điểm đến" type="text" name="location" required>
-        <input type="date" name="checkIn" required>
-        <input type="date" name="checkOut" required>
-        <input type="number" name="numberOfGuests" placeholder="Số lượng khách" required>
+    <form th:action="@{/auth/hotels/search}" method="get" class="search-box">
+        <input placeholder="Nhập tên hotel" type="text" name="hotelName" required="required">
+        <input placeholder="Địa điểm" type="text" name="location" required="required">
+<!--            <div class="date-picker">-->
+<!--                <span id="checkIn">Ngày nhận phòng</span>-->
+<!--            </div>-->
+<!--            <div class="date-picker">-->
+<!--                <span id="checkOut">Ngày trả phòng</span>-->
+<!--            </div>-->
         <input type="number" name="minPrice" placeholder="Giá tối thiểu" min="0">
         <input type="number" name="maxPrice" placeholder="Giá tối đa" min="0">
-        <input type="text" name="amenities" placeholder="Tiện nghi (ví dụ: nhà hàng, bãi biển)">
-        <button type="submit">Tìm kiếm</button>
-    </div>
+<!--        <input type="text" name="amenities" placeholder="Tiện nghi (ví dụ: spa, hồ bơi)">-->
+        <button type="submit" class="btn btn-primary w-100">Tìm kiếm</button>
+    </form>
 </div>
 
 <div class="content">
-    <div id="hotel-list"></div> <!-- Kết quả tìm kiếm sẽ hiển thị ở đây -->
+    <div id="listHotel" th:each="hotel : ${hotels}">
+        <span th:text="${hotel.name}"></span> -
+        <span th:text="${hotel.location}"></span> -
+        <span th:text="${hotel.pricePerNight}"></span>
+        <a th:href="@{/auth/hotels/details/{id}(id=${hotel.id})}">Xem Chi Tiết</a>
+    </div>
 </div>
 
 <script>
+    // Xử lý sự kiện form tìm kiếm
     document.getElementById('searchForm').addEventListener('submit', function(event) {
-        event.preventDefault();
+    event.preventDefault();
 
-        const location = document.getElementById('location').value;
-        const checkIn = document.getElementById('checkIn').value;
-        const checkOut = document.getElementById('checkOut').value;
-        const numberOfGuests = document.getElementById('numberOfGuests').value;
-        const minPrice = document.getElementById('minPrice').value;
-        const maxPrice = document.getElementById('maxPrice').value;
-        const amenities = document.getElementById('amenities').value;
+    const hotelName = document.getElementById('hotelName').value;
+    const location = document.getElementById('location').value;
+    const minPrice = document.getElementById('minPrice').value;
+    const maxPrice = document.getElementById('maxPrice').value;
+<!--    const amenities = document.getElementById('amenities').value;-->
 
-        fetch(`/api/hotels/search?location=${location}&checkIn=${checkIn}&checkOut=${checkOut}&numberOfGuests=${numberOfGuests}&minPrice=${minPrice}&maxPrice=${maxPrice}&amenities=${amenities}`)
-            .then(response => response.json())
-            .then(data => {
-                displayHotels(data);
-            });
+    // Tạo URL query string
+    const params = new URLSearchParams({
+        hotelName,
+        location,
+        minPrice,
+        maxPrice,
+        amenities
     });
 
+    // Fetch data từ backend với URL có query parameters
+    const url = `/auth/hotels/search?${params.toString()}`;
+
+    fetch(url)
+        .then(response => response.json())
+        .then(data => {
+            displayHotels(data);
+        })
+        .catch(error => console.error('Error:', error));
+    });
+
+    // Hiển thị các khách sạn tìm được
     function displayHotels(hotels) {
         const hotelList = document.getElementById('hotel-list');
         hotelList.innerHTML = "";
@@ -76,13 +104,56 @@
                 <p><b>Địa điểm:</b> ${hotel.location}</p>
                 <p><b>Giá mỗi đêm:</b> ${hotel.pricePerNight} VND</p>
                 <p><b>Đánh giá:</b> ${hotel.rating} / 5</p>
-                <p><b>Tiện nghi:</b> ${hotel.amenities}</p>
+                <p><b>Tiện nghi:</b> ${hotel.amenities.join(', ')}</p> <!-- Thêm join để hiển thị các tiện nghi -->
                 <p><b>Số phòng còn trống:</b> ${hotel.availableRooms}</p>
             `;
             hotelList.appendChild(hotelDiv);
         });
     }
+
+
+    // Cấu hình Date Range Picker cho từng trường riêng biệt
+    $(document).ready(function () {
+        // Lịch cho ngày nhận phòng
+        $('#checkIn').daterangepicker({
+            singleDatePicker: true,
+            autoApply: true,
+            locale: {
+                format: 'DD/MM/YYYY',
+                daysOfWeek: ['CN', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7'],
+                monthNames: [
+                    'Tháng 1', 'Tháng 2', 'Tháng 3', 'Tháng 4', 'Tháng 5', 'Tháng 6',
+                    'Tháng 7', 'Tháng 8', 'Tháng 9', 'Tháng 10', 'Tháng 11', 'Tháng 12'
+                ],
+                firstDay: 1
+            },
+            minDate: moment() // Ngày tối thiểu là hôm nay
+        }, function(start) {
+            $('#checkIn').text(start.format('DD/MM/YYYY'));
+            // Giới hạn ngày trả phòng
+            $('#checkOut').data('daterangepicker').setMinDate(start);
+        });
+
+        // Lịch cho ngày trả phòng
+        $('#checkOut').daterangepicker({
+            singleDatePicker: true,
+            autoApply: true,
+            locale: {
+                format: 'DD/MM/YYYY',
+                daysOfWeek: ['CN', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7'],
+                monthNames: [
+                    'Tháng 1', 'Tháng 2', 'Tháng 3', 'Tháng 4', 'Tháng 5', 'Tháng 6',
+                    'Tháng 7', 'Tháng 8', 'Tháng 9', 'Tháng 10', 'Tháng 11', 'Tháng 12'
+                ],
+                firstDay: 1
+            },
+            minDate: moment() // Ngày tối thiểu là hôm nay
+        }, function(start) {
+            $('#checkOut').text(start.format('DD/MM/YYYY'));
+        });
+    });
 </script>
+
 
 <div class="content">
     <div class="section-title">Các điểm đến thu hút nhất Việt Nam</div>
@@ -107,53 +178,39 @@
         </div>
     </div>
     <div class="vip-section">
-        <div class="section-title">
-            <h2>Chào mừng trở lại, <span th:text="${username}">Tên người dùng</span>!</h2>
+        <div class="welcome-section">
+            <h3>Chào mừng trở lại, <span th:text="${username}">Tên người dùng</span>!</h3>
             <p>Cấp độ VIP của bạn: <span th:text="${vipLevel}"></span></p>
+            <p>
+                Mỗi khi quý khách thấy thẻ VIP, điều đó có nghĩa là quý khách đang nhận được giảm giá đặc biệt hoặc lợi ích chỉ dành cho người dùng VIP.
+            </p>
         </div>
-        <div class="card vip-card">
+        <div class="vip-card">
             <div class="card-body">
                 <div class="vip-header">
                     <img th:src="${vipImage}" alt="VIP Level" class="vip-icon">
                     <h3 th:text="${vipLevel}">VIP</h3>
                 </div>
                 <p class="vip-message">Welcome Booking VIP Member!</p>
-                <p>
-                    Mỗi khi quý khách thấy thẻ VIP, điều này có nghĩa là quý khách đang nhận được giảm giá đặc biệt hoặc lợi ích chỉ dành cho người dùng VIP.
-                </p>
                 <hr>
                 <div class="vip-levels">
-                    <p><b>Bronze:</b> 2 đêm đặt phòng</p>
-                    <p><b>Silver:</b> 5 đêm đặt phòng</p>
-                    <p><b>Gold:</b> 15 đêm đặt phòng</p>
-                    <p><b>Platinum:</b> 25 đêm đặt phòng</p>
-                </div>
-
-                <!-- Progress bar -->
-                <div class="vip-levels-progress">
-                    <div class="level-item">
-                        <span class="level-icon level-bronze"></span>
-                        <div class="level-line"></div>
-                        <div class="level-text">Bronze</div>
+                    <div class="level bronze">
+                        <span></span>
+                        <p>Bronze</p>
                     </div>
-                    <div class="level-item">
-                        <span class="level-icon level-silver"></span>
-                        <div class="level-line"></div>
-                        <div class="level-text">Silver</div>
+                    <div class="level silver">
+                        <span></span>
+                        <p>Silver</p>
                     </div>
-                    <div class="level-item">
-                        <span class="level-icon level-gold"></span>
-                        <div class="level-line"></div>
-                        <div class="level-text">Gold</div>
+                    <div class="level gold">
+                        <span></span>
+                        <p>Gold</p>
                     </div>
-                    <div class="level-item">
-                        <span class="level-icon level-platinum"></span>
-                        <div class="level-line"></div>
-                        <div class="level-text">Platinum</div>
+                    <div class="level platinum">
+                        <span></span>
+                        <p>Platinum</p>
                     </div>
                 </div>
-
-                <!-- Nút "Chi tiết thêm" -->
                 <button class="btn-details">Chi tiết thêm</button>
             </div>
         </div>

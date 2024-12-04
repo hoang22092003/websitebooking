@@ -1,134 +1,125 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Booking Homepage</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        .banner {
-            background: url('./banner2.png') center/cover no-repeat;
-            height: 500px;
-            color: rgba(255, 255, 255, 0.133);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-        }
-        .banner h1 {
-            font-size: 2.5rem;
-            font-weight: bold;
-        }
-        .search-box {
-            background: rgba(255, 255, 255, 0.133);
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            max-width: 800px;
-            margin: -100px auto 0;
-            display: flex;
-            flex-direction: column;
-        }
-        .popular-destinations img {
-            border-radius: 8px;
-            height: 200px;
-            object-fit: cover;
-            width: 100%;
-        }
-
-    </style>
+    <title>Website Booking - Trang chủ</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <link rel="stylesheet" th:href="@{/css/vip.css}">
 </head>
 <body>
+<div class="header">
+    <a th:href="@{/}">
+        <img alt="Logo" height="100" th:src="@{/images/logo.png}" width="100"/>
+    </a>
+    <div class="nav-links">
+        <a th:href="@{/auth/hotels/homeHotel}">Tìm khách sạn</a>
+        <a th:href="@{/auth/resorts/homeResort}">Tìm Resort</a>
+        <a href="#">Tìm Du Thuyền</a>
+        <a href="#">Hoạt động</a>
+        <a href="#">Phiếu ưu đãi và ưu đãi</a>
+    </div>
+    <div class="user-info">
+        <img alt="Profile Picture" height="30" th:src="@{/images/profile picture.jpg}" width="30"/>
+        <span th:text="${username}">Tên người dùng</span>
+    </div>
+</div>
 
-<!-- Navbar -->
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <div class="container">
-        <a class="navbar-brand" href="#">BookingSite</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ms-auto">
-                <li class="nav-item">
-                    <a class="nav-link active" href="#">Máy bay + Khách sạn</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Chỗ ở</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Phương tiện di chuyển</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Hoạt động</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Đăng nhập</a>
-                </li>
-                <li class="nav-item">
-                    <a class="btn btn-primary nav-link text-white" href="#">Tạo tài khoản</a>
-                </li>
-            </ul>
+<div class="search-section" th:style="'background-image: url(' + @{/images/banner.jpg} + ')'">
+    <h1>ĐẶT NGAY HÔM NAY, TRẢI NGHIỆM KỲ NGHỈ TUYỆT VỜI</h1>
+</div>
+
+<div class="content">
+    <div class="section-title">Các điểm đến thu hút nhất Việt Nam</div>
+    <div class="carousel">
+        <div class="card">
+            <img alt="Hồ Chí Minh" height="200" th:src="@{/images/HCM.jpg}" width="300"/>
+            <div class="card-body">
+                <h3>Hồ Chí Minh</h3>
+            </div>
         </div>
-    </div>
-</nav>
-
-<!-- Banner Section -->
-<section class="banner">
-    <div class="container">
-
-        <h1>RONG CHƠI BỐN PHƯƠNG, GIÁ VẪN "YÊU THƯƠNG"</h1>
-    </div>
-</section>
-
-
-
-<!-- Search Box -->
-<section class="search-box">
-    <div class="container">
-        <div class="row g-2">
-            <div class="col-md-3">
-                <input type="text" class="form-control" placeholder="Địa điểm">
+        <div class="card">
+            <img alt="Hà Nội" height="200" th:src="@{/images/Hà nội.jpg}" width="300"/>
+            <div class="card-body">
+                <h3>Hà Nội</h3>
             </div>
-            <div class="col-md-2">
-                <input type="date" class="form-control" placeholder="Ngày đến">
-            </div>
-            <div class="col-md-2">
-                <input type="date" class="form-control" placeholder="Ngày đi">
-            </div>
-            <div class="col-md-2">
-                <input type="number" class="form-control" placeholder="Khách">
-            </div>
-            <div class="col-md-3">
-                <button class="btn btn-primary w-100">Tìm</button>
+        </div>
+        <div class="card">
+            <img alt="Đà Nẵng" height="200" th:src="@{/images/Đà Nẵng.jpg}" width="300"/>
+            <div class="card-body">
+                <h3>Đà Nẵng</h3>
             </div>
         </div>
     </div>
-</section>
-
-<!-- Popular Destinations -->
-<section class="container popular-destinations my-5">
-    <h2 class="text-center mb-4">Các điểm đến thu hút nhất Việt Nam</h2>
-    <div class="row">
-        <div class="col-md-4">
-            <img src="../../DoAnChuyenNganh/websitebooking/src/main/resources/static/images/HCM.jpg" alt="Hồ Chí Minh" class="img-fluid">
-            <h5 class="text-center mt-2">Hồ Chí Minh</h5>
+    <div class="vip-section">
+        <div class="welcome-section">
+            <h3>Chào mừng trở lại, <span th:text="${username}">Tên người dùng</span>!</h3>
+            <p>Cấp độ VIP của bạn: <span th:text="${vipLevel}"></span></p>
+            <p>
+                Mỗi khi quý khách thấy thẻ VIP, điều đó có nghĩa là quý khách đang nhận được giảm giá đặc biệt hoặc lợi ích chỉ dành cho người dùng VIP.
+            </p>
         </div>
-        <div class="col-md-4">
-            <img src="../../DoAnChuyenNganh/websitebooking/src/main/resources/static/images/Hà%20nội.jpg" alt="Hà Nội" class="img-fluid">
-            <h5 class="text-center mt-2">Hà Nội</h5>
-        </div>
-        <div class="col-md-4">
-            <img src="đà nẵng.jpg" alt="Đà Nẵng" class="img-fluid">
-            <h5 class="text-center mt-2">Đà Nẵng</h5>
+        <div class="vip-card">
+            <div class="card-body">
+                <div class="vip-header">
+                    <img th:src="${vipImage}" alt="VIP Level" class="vip-icon">
+                    <h3 th:text="${vipLevel}">VIP</h3>
+                </div>
+                <p class="vip-message">Welcome Booking VIP Member!</p>
+                <hr>
+                <div class="vip-levels">
+                    <div class="level bronze">
+                        <span></span>
+                        <p>Bronze</p>
+                    </div>
+                    <div class="level silver">
+                        <span></span>
+                        <p>Silver</p>
+                    </div>
+                    <div class="level gold">
+                        <span></span>
+                        <p>Gold</p>
+                    </div>
+                    <div class="level platinum">
+                        <span></span>
+                        <p>Platinum</p>
+                    </div>
+                </div>
+                <button class="btn-details">Chi tiết thêm</button>
+            </div>
         </div>
     </div>
-</section>
+</div>
 
-<!-- Footer -->
-<footer class="bg-light text-center py-4">
-    <p>&copy; 2024 BookingSite. All Rights Reserved.</p>
-</footer>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<div class="footer">
+    <div class="footer-links">
+        <div>
+            <h4>Trợ giúp</h4>
+            <a href="#">Trung tâm trợ giúp</a><br/>
+            <a href="#">Câu hỏi thường gặp</a><br/>
+            <a href="#">Chính sách bảo mật</a><br/>
+            <a href="#">Chính sách về cookie</a><br/>
+            <a href="#">Điều khoản sử dụng</a><br/>
+            <a href="#">Dự luật Dịch vụ số (EU)</a><br/>
+            <a href="#">Nguyên tắc về bảo mật nội dung</a><br/>
+            <a href="#">Tuân thủ về Dự luật Nội bộ Hiện đại</a>
+        </div>
+        <div>
+            <h4>Công ty</h4>
+            <a href="#">Về chúng tôi</a><br/>
+            <a href="#">Sự nghiệp</a><br/>
+            <a href="#">Phòng báo chí</a><br/>
+            <a href="#">Nhật ký mạng</a><br/>
+            <a href="#">DMMKAT</a>
+        </div>
+        <div>
+            <h4>Điểm du lịch</h4>
+            <a href="#">Cuộc gọi</a><br/>
+            <a href="#">Mọi chúng bay</a>
+        </div>
+    </div>
+    <p>Mọi nội dung tại đây © 2005 – 2024 Công ty TNHH Booking. Bảo Lưu Mọi Quyền.</p>
+</div>
 </body>
 </html>

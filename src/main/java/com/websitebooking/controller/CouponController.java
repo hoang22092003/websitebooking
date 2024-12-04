@@ -1,12 +1,13 @@
 package com.websitebooking.controller;
 
-import com.websitebooking.entity.Coupon;
+import com.websitebooking.model.Coupon;
 import com.websitebooking.service.CouponService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/coupons")
@@ -20,28 +21,31 @@ public class CouponController {
         return couponService.getAllCoupons();
     }
 
-    @GetMapping("/{id}")
-    public Optional<Coupon> getCouponById(@PathVariable Long id) {
-        return couponService.getCouponById(id);
-    }
-
     @PostMapping
-    public Coupon addCoupon(@RequestBody Coupon coupon) {
-        return couponService.addCoupon(coupon);
+    public Coupon createCoupon(@RequestBody Coupon coupon) {
+        return couponService.saveCoupon(coupon);
     }
 
-    @PutMapping("/{id}")
-    public Coupon updateCoupon(@PathVariable Long id, @RequestBody Coupon updatedCoupon) {
-        return couponService.updateCoupon(id, updatedCoupon);
+    @GetMapping("/{code}")
+    public ResponseEntity<Coupon> getCouponByCode(@PathVariable String code) {
+        return couponService.getCouponByCode(code)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @PostMapping("/apply")
+    public ResponseEntity<Coupon> applyCoupon(@RequestParam String code) {
+        try {
+            Coupon coupon = couponService.applyCoupon(code);
+            return ResponseEntity.ok(coupon);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(null);
+        }
     }
 
     @DeleteMapping("/{id}")
-    public void deleteCoupon(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteCoupon(@PathVariable Long id) {
         couponService.deleteCoupon(id);
-    }
-
-    @GetMapping("/code/{code}")
-    public Coupon getCouponByCode(@PathVariable String code) {
-        return couponService.getCouponByCode(code);
+        return ResponseEntity.noContent().build();
     }
 }

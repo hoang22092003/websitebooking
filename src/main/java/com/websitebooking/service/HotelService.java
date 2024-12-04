@@ -1,12 +1,11 @@
 package com.websitebooking.service;
 
-import com.websitebooking.entity.Hotel;
+import com.websitebooking.model.Hotel;
 import com.websitebooking.repository.HotelRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class HotelService {
@@ -18,28 +17,20 @@ public class HotelService {
         return hotelRepository.findAll();
     }
 
-    public Optional<Hotel> getHotelById(Long id) {
-        return hotelRepository.findById(id);
-    }
-
-    public Hotel addHotel(Hotel hotel) {
+    public Hotel saveHotel(Hotel hotel) {
         return hotelRepository.save(hotel);
     }
 
-    public Hotel updateHotel(Long id, Hotel updatedHotel) {
-        return hotelRepository.findById(id)
-                .map(hotel -> {
-                    hotel.setName(updatedHotel.getName());
-                    hotel.setLocation(updatedHotel.getLocation());
-                    hotel.setPricePerNight(updatedHotel.getPricePerNight());
-                    hotel.setRating(updatedHotel.getRating());
-                    hotel.setImageUrl(updatedHotel.getImageUrl());
-                    return hotelRepository.save(hotel);
-                })
-                .orElseThrow(() -> new RuntimeException("Hotel not found with id: " + id));
+    public Hotel getHotelById(Long id) {
+        return hotelRepository.findById(id).orElse(null);
     }
 
     public void deleteHotel(Long id) {
         hotelRepository.deleteById(id);
+    }
+
+    // Tìm khách sạn theo các tiêu chí: location, minPrice, maxPrice, amenities
+    public List<Hotel> searchHotels(String hotelName, String location, double minPrice, double maxPrice, String amenities) {
+        return hotelRepository.findHotelsByCriteria(hotelName, location, minPrice, maxPrice, amenities);
     }
 }
